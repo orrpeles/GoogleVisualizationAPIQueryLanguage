@@ -1,0 +1,48 @@
+// the function has 3 parameters, data (range), valueToCheck (email address) and equal (if valueToCheck must be equal to value in range)
+function COUNT_SEQUENSE(data, valueToCheck, equal) {
+  if (Array.isArray(data) == false) { //if no range is given throw error
+    throw 'No range is given'
+  }
+  
+  //Check if the range is a single column. If so create a new 2d array with one "row", see sampleColumnFlat2d
+
+  if (data[0].length == 1) { 
+    data = [data.flat()]
+  }
+
+  const results = []; //empty list for results
+
+  data.forEach(row => {
+    const columnValues = row.filter(v => v !='') //filter out empty rows from array
+    let count = 0;
+    let max = 0;
+    let breakCount = false
+
+//For each filterd "column" value check if it is meeting the criteria.
+    columnValues.forEach(currentValue => {
+      if (equal == true && currentValue === valueToCheck) {
+        count += 1;
+      } else if (equal == false && currentValue !== valueToCheck) {
+        count += 1;
+        //If both if statements are not true then switch the breakCount boolean to true.
+      } else {
+        breakCount = true
+      }
+//Check if count is greater then max, if so then set the max to the current count.
+      if (count > max) {
+        max = count
+//Check if the "switch" is on. If so reset the count to 0 and reset the switch.
+      } else if (breakCount) {
+        count = 0;
+        breakCount = false;
+      }
+    })
+ /* 
+      After checking every column value in in the row array we push the result to the result array.
+      So this is still inside the for each row, but after the for each column value .
+  */
+    results.push([max])
+  });
+
+  return results;
+}
